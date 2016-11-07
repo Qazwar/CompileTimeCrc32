@@ -20,7 +20,7 @@ class crc32_basic {
 		struct indices_holder {};
 
 		template <uint32_t N, uint32_t... i>
-		struct make_indices : public make_indices<N - 1, N - 1, i...> {};
+		struct make_indices : public std::conditional<(N >= 10), make_indices<N - 10, N - 10, N - 9, N - 8, N - 7, N - 6, N - 5, N - 4, N - 3, N - 2, N - 1, i...>, make_indices<N - 1, N - 1, i...>>::type {};
 
 		template <uint32_t... i>
 		struct make_indices<0, i...> {
@@ -79,7 +79,7 @@ public:
 	}
 
 	// std::string ver (runtime only)
-	template <template <typename> typename Traits, template <typename> typename Alloc>
+	template <template <class> class Traits, template <class> class Alloc>
 	inline uint32_t operator()(const std::basic_string<char, Traits<char>, Alloc<char>>& str) const
 	{
 		return operator()(str.c_str(), str.length());
